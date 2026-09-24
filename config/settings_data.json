@@ -18,10 +18,10 @@
           "settings": {
             "background": "#FFFFFF",
             "background_gradient": "",
-            "text": "#121212",
-            "button": "#121212",
+            "text": "#111622",
+            "button": "#FF6767",
             "button_label": "#FFFFFF",
-            "secondary_button_label": "#121212",
+            "secondary_button_label": "#111622",
             "shadow": "#121212"
           }
         },
@@ -30,30 +30,30 @@
             "background": "#F3F3F3",
             "background_gradient": "",
             "text": "#121212",
-            "button": "#121212",
-            "button_label": "#F3F3F3",
+            "button": "#FF6767",
+            "button_label": "#FFFFFF",
             "secondary_button_label": "#121212",
             "shadow": "#121212"
           }
         },
         "scheme-3": {
           "settings": {
-            "background": "#242833",
+            "background": "#151A22",
             "background_gradient": "",
             "text": "#FFFFFF",
-            "button": "#FFFFFF",
-            "button_label": "#000000",
+            "button": "#FF6767",
+            "button_label": "#FFFFFF",
             "secondary_button_label": "#FFFFFF",
             "shadow": "#121212"
           }
         },
         "scheme-4": {
           "settings": {
-            "background": "#121212",
+            "background": "#0B0E14",
             "background_gradient": "",
             "text": "#FFFFFF",
-            "button": "#FFFFFF",
-            "button_label": "#121212",
+            "button": "#FF6767",
+            "button_label": "#FFFFFF",
             "secondary_button_label": "#FFFFFF",
             "shadow": "#121212"
           }
@@ -82,7 +82,7 @@
       "animations_hover_elements": "none",
       "buttons_border_thickness": 1,
       "buttons_border_opacity": 100,
-      "buttons_radius": 0,
+      "buttons_radius": 6,
       "buttons_shadow_opacity": 0,
       "buttons_shadow_horizontal_offset": 0,
       "buttons_shadow_vertical_offset": 4,
@@ -181,7 +181,7 @@
       "predictive_search_show_vendor": false,
       "predictive_search_show_price": false,
       "currency_code_enabled": true,
-      "cart_type": "notification",
+      "cart_type": "drawer",
       "show_vendor": false,
       "show_cart_note": false,
       "cart_drawer_collection": "",
