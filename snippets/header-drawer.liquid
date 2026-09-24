@@ -25,19 +25,7 @@
         <div class="menu-drawer__navigation-container">
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
-              {%- liquid
-                assign show_figma_menu = false
-                if section.settings.menu == blank or section.settings.menu.links.size == 0
-                  assign show_figma_menu = true
-                else
-                  assign link_titles = section.settings.menu.links | map: 'title' | join: ',' | downcase
-                  if link_titles == 'home,catalog,contact'
-                    assign show_figma_menu = true
-                  endif
-                endif
-              -%}
-              {%- if show_figma_menu == false -%}
-                {%- for link in section.settings.menu.links -%}
+              {%- for link in section.settings.menu.links -%}
                 <li>
                   {%- if link.links != blank -%}
                     <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
@@ -149,16 +137,6 @@
                   {%- endif -%}
                 </li>
               {%- endfor -%}
-              {%- else -%}
-                <li><a href="{{ routes.root_url }}" class="menu-drawer__menu-item list-menu__item link link--text focus-inset menu-drawer__menu-item--active">Home</a></li>
-                <li><a href="#about-albania" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">About Albania</a></li>
-                <li><a href="#destinations" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">Destinations</a></li>
-                <li><a href="#experiences" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">Experiences</a></li>
-                <li><a href="#events" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">Events</a></li>
-                <li><a href="#news" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">News</a></li>
-                <li><a href="#media" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">Media</a></li>
-                <li><a href="#contact" class="menu-drawer__menu-item list-menu__item link link--text focus-inset">Contact</a></li>
-              {%- endif -%}
             </ul>
           </nav>
           <div class="menu-drawer__utility-links">

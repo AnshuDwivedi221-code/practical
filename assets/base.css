@@ -1331,29 +1331,6 @@ button.shopify-payment-button__button--unbranded {
   padding: 1.2rem 2.6rem;
 }
 
-/* Figma Brand Primary Button */
-.button--primary,
-.button:not(.button--secondary):not(.button--tertiary) {
-  background-color: var(--brand-primary, #FF6767);
-  color: #FFFFFF;
-  border-radius: var(--buttons-radius, 6px);
-  font-family: var(--font-body-family);
-  font-weight: 600;
-  font-size: 1.45rem;
-  letter-spacing: 0.06rem;
-  padding: 1.2rem 2.8rem;
-  border: 0;
-  box-shadow: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.button--primary:hover,
-.button:not(.button--secondary):not(.button--tertiary):hover {
-  background-color: var(--brand-primary-hover, #E85555);
-  color: #FFFFFF;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 103, 103, 0.35);
-}
 
 /* Shopify Accelerated Checkout */
 
@@ -2870,7 +2847,6 @@ details[open] > .header__submenu {
 }
 
 .header__menu-item:hover span {
-  text-decoration: underline;
   text-underline-offset: 0.3rem;
 }
 

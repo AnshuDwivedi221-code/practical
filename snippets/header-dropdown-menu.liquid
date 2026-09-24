@@ -7,19 +7,7 @@
 
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
-    {%- liquid
-      assign show_figma_menu = false
-      if section.settings.menu == blank or section.settings.menu.links.size == 0
-        assign show_figma_menu = true
-      else
-        assign link_titles = section.settings.menu.links | map: 'title' | join: ',' | downcase
-        if link_titles == 'home,catalog,contact'
-          assign show_figma_menu = true
-        endif
-      endif
-    -%}
-    {%- if show_figma_menu == false -%}
-      {%- for link in section.settings.menu.links -%}
+    {%- for link in section.settings.menu.links -%}
       <li>
         {%- if link.links != blank -%}
           <header-menu>
@@ -111,15 +99,6 @@
         {%- endif -%}
       </li>
     {%- endfor -%}
-    {%- else -%}
-      <li><a href="{{ routes.root_url }}" class="header__menu-item list-menu__item link focus-inset"><span class="header__active-menu-item">Home</span></a></li>
-      <li><a href="#about-albania" class="header__menu-item list-menu__item link focus-inset"><span>About Albania</span></a></li>
-      <li><a href="#destinations" class="header__menu-item list-menu__item link focus-inset"><span>Destinations</span></a></li>
-      <li><a href="#experiences" class="header__menu-item list-menu__item link focus-inset"><span>Experiences</span></a></li>
-      <li><a href="#events" class="header__menu-item list-menu__item link focus-inset"><span>Events</span></a></li>
-      <li><a href="#news" class="header__menu-item list-menu__item link focus-inset"><span>News</span></a></li>
-      <li><a href="#media" class="header__menu-item list-menu__item link focus-inset"><span>Media</span></a></li>
-      <li><a href="#contact" class="header__menu-item list-menu__item link focus-inset"><span>Contact</span></a></li>
-    {%- endif -%}
   </ul>
 </nav>
+
