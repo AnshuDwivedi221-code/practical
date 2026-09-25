@@ -1,0 +1,566 @@
+{{ 'section-why-choose-us.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  #WhyChooseUs-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+
+  #WhyChooseUs-{{ section.id }} .why-choose-us__heading,
+  #WhyChooseUs-{{ section.id }} .why-choose-us__title {
+    color: {{ section.settings.heading_color }};
+  }
+
+  #WhyChooseUs-{{ section.id }} .why-choose-us__description,
+  #WhyChooseUs-{{ section.id }} .why-choose-us__text {
+    color: {{ section.settings.text_color }};
+  }
+
+  #WhyChooseUs-{{ section.id }} .why-choose-us__icon-badge {
+    color: {{ section.settings.badge_icon_color }};
+  }
+
+  #WhyChooseUs-{{ section.id }} .why-choose-us__button {
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+  }
+
+  #WhyChooseUs-{{ section.id }} .why-choose-us__button:hover {
+    background-color: {{ section.settings.button_hover_bg_color }};
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign total_blocks = section.blocks.size
+  assign left_count = total_blocks | divided_by: 2.0 | ceil
+-%}
+
+<div
+  id="WhyChooseUs-{{ section.id }}"
+  class="why-choose-us section-{{ section.id }}-padding"
+>
+  <div class="page-width why-choose-us__wrapper">
+    {%- if section.settings.heading != blank or section.settings.description != blank -%}
+      <div class="why-choose-us__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="why-choose-us__heading {{ section.settings.heading_size }}">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.description != blank -%}
+          <div class="why-choose-us__description rte">
+            {{ section.settings.description }}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="why-choose-us__grid">
+      {%- comment -%} Left Column {%- endcomment -%}
+      <div class="why-choose-us__col why-choose-us__col--left">
+        {%- for block in section.blocks limit: left_count -%}
+          <div
+            class="why-choose-us__card why-choose-us__card--left why-choose-us__card--left-{{ forloop.index }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="why-choose-us__card-inner">
+              <div class="why-choose-us__icon-badge">
+                {%- if block.settings.custom_icon != blank -%}
+                  {{
+                    block.settings.custom_icon
+                    | image_url: width: 120
+                    | image_tag: loading: 'lazy', alt: block.settings.title
+                    | escape
+                  }}
+                {%- else -%}
+                  {%- case block.settings.icon -%}
+                    {%- when 'flask' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h-1v5.17l5.24 7.33A2.5 2.5 0 0 1 17.2 20H6.8a2.5 2.5 0 0 1-2.04-3.95L10 8.72V3H9V2z"/>
+                        <circle cx="9.5" cy="16" r="1.1" fill="#ffffff"/>
+                        <circle cx="14" cy="14.5" r="0.9" fill="#ffffff"/>
+                        <path d="M14.5 16.5l.4.9.9.4-.9.4-.4.9-.4-.9-.9-.4.9-.4z" fill="#ffffff"/>
+                      </svg>
+                    {%- when 'leaf' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.8 11.6c-.8-.7-1.8-1.1-2.9-1.1-2.4 0-4.4 2-4.4 4.4 0 2.3 1.6 4.1 3.7 4.4-.3.6-.5 1.2-.6 1.9-.3 2.4 1.4 4.5 3.8 4.8 2.2.2 4.1-1.2 4.7-3.2.6 2 2.5 3.4 4.7 3.2 2.4-.3 4.1-2.4 3.8-4.8-.1-.7-.3-1.3-.6-1.9 2.1-.3 3.7-2.1 3.7-4.4 0-2.4-2-4.4-4.4-4.4-1.1 0-2.1.4-2.9 1.1-.3-.6-.8-1.1-1.4-1.5 1.5-.7 2.5-2.2 2.5-3.9 0-2.4-2-4.4-4.4-4.4s-4.4 2-4.4 4.4c0 1.7 1 3.2 2.5 3.9-.6.4-1.1.9-1.4 1.5z"/>
+                        <path d="M11 16c-.5 3-1.8 6-3.8 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    {%- when 'clipboard' -%}
+                      <svg viewBox="0 0 24 24">
+                        <path d="M19 3h-3.18C15.4 1.84 14.3 1 13 1s-2.4.84-2.82 2H7c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6-.5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" fill="currentColor"/>
+                        <path d="M9.5 12.5l2 2 4.5-4.5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    {%- when 'heart' -%}
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+                        <path d="M11 7.5h2v3h3v2h-3v3h-2v-3H8v-2h3v-3z" fill="#ffffff"/>
+                      </svg>
+                    {%- when 'gear' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+                        <circle cx="12" cy="12" r="1.5" fill="#ffffff"/>
+                      </svg>
+                    {%- when 'recycle' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.02 4.28L8.14 7.53l1.73 1 2.93-5.07L9.93 0 8.2 1 9.94 4L7.5 4C4.46 4 2 6.46 2 9.5c0 1.2.39 2.31 1.05 3.22l1.64-1.15C4.26 10.95 4 10.25 4 9.5 4 7.57 5.57 6 7.5 6l2.52 0-.001-1.72h.001zm10.93 8.22c.66-.91 1.05-2.02 1.05-3.22 0-3.04-2.46-5.5-5.5-5.5l-2.44 0 1.74-3-1.73-1-2.87 4.98 2.87 4.98 1.73-1-1.75-3.03 2.45.07c1.93 0 3.5 1.57 3.5 3.5 0 .75-.26 1.45-.69 2.07l1.64 1.15zM8.28 19.72l-1.74-3-1.73 1 2.87 4.98 5.74-.01v-2l-3.41 0 1.22-2.11c.96.58 2.08.92 3.27.92 3.04 0 5.5-2.46 5.5-5.5 0-.41-.05-.8-.13-1.19l-1.95.4c.05.26.08.52.08.79 0 1.93-1.57 3.5-3.5 3.5-.75 0-1.46-.24-2.05-.64l-1.65 2.86z"/>
+                      </svg>
+                    {%- when 'shield' -%}
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="currentColor"/>
+                        <path d="M9.5 12l2 2 4-4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    {%- when 'star' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                    {%- when 'check' -%}
+                      <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                        <path d="M8.5 12.5l2.5 2.5 5-5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                  {%- endcase -%}
+                {%- endif -%}
+              </div>
+              {%- if block.settings.title != blank -%}
+                <h3 class="why-choose-us__title">
+                  {{ block.settings.title }}
+                </h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="why-choose-us__text">
+                  {{ block.settings.text }}
+                </p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Center Product Column {%- endcomment -%}
+      <div class="why-choose-us__col why-choose-us__col--center">
+        <div class="why-choose-us__image-box">
+          {%- if section.settings.image != blank -%}
+            {{
+              section.settings.image
+              | image_url: width: 900
+              | image_tag:
+                loading: 'lazy',
+                widths: '300, 450, 600, 750, 900',
+                class: 'why-choose-us__image',
+                alt: section.settings.heading
+              | escape
+            }}
+          {%- else -%}
+            <div class="why-choose-us__placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                <circle cx="9" cy="9" r="2"/>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+              </svg>
+              <span>Select Product Image</span>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.button_label != blank -%}
+          <div class="why-choose-us__cta">
+            <a
+              {% if section.settings.button_link != blank %}
+                href="{{ section.settings.button_link }}"
+              {% else %}
+                role="link" aria-disabled="true"
+              {% endif %}
+              class="why-choose-us__button"
+            >
+              {{- section.settings.button_label | escape -}}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Right Column {%- endcomment -%}
+      <div class="why-choose-us__col why-choose-us__col--right">
+        {%- for block in section.blocks offset: left_count -%}
+          <div
+            class="why-choose-us__card why-choose-us__card--right why-choose-us__card--right-{{ forloop.index }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="why-choose-us__card-inner">
+              <div class="why-choose-us__icon-badge">
+                {%- if block.settings.custom_icon != blank -%}
+                  {{
+                    block.settings.custom_icon
+                    | image_url: width: 120
+                    | image_tag: loading: 'lazy', alt: block.settings.title
+                    | escape
+                  }}
+                {%- else -%}
+                  {%- case block.settings.icon -%}
+                    {%- when 'flask' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h-1v5.17l5.24 7.33A2.5 2.5 0 0 1 17.2 20H6.8a2.5 2.5 0 0 1-2.04-3.95L10 8.72V3H9V2z"/>
+                        <circle cx="9.5" cy="16" r="1.1" fill="#ffffff"/>
+                        <circle cx="14" cy="14.5" r="0.9" fill="#ffffff"/>
+                        <path d="M14.5 16.5l.4.9.9.4-.9.4-.4.9-.4-.9-.9-.4.9-.4z" fill="#ffffff"/>
+                      </svg>
+                    {%- when 'leaf' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.8 11.6c-.8-.7-1.8-1.1-2.9-1.1-2.4 0-4.4 2-4.4 4.4 0 2.3 1.6 4.1 3.7 4.4-.3.6-.5 1.2-.6 1.9-.3 2.4 1.4 4.5 3.8 4.8 2.2.2 4.1-1.2 4.7-3.2.6 2 2.5 3.4 4.7 3.2 2.4-.3 4.1-2.4 3.8-4.8-.1-.7-.3-1.3-.6-1.9 2.1-.3 3.7-2.1 3.7-4.4 0-2.4-2-4.4-4.4-4.4-1.1 0-2.1.4-2.9 1.1-.3-.6-.8-1.1-1.4-1.5 1.5-.7 2.5-2.2 2.5-3.9 0-2.4-2-4.4-4.4-4.4s-4.4 2-4.4 4.4c0 1.7 1 3.2 2.5 3.9-.6.4-1.1.9-1.4 1.5z"/>
+                        <path d="M11 16c-.5 3-1.8 6-3.8 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                      </svg>
+                    {%- when 'clipboard' -%}
+                      <svg viewBox="0 0 24 24">
+                        <path d="M19 3h-3.18C15.4 1.84 14.3 1 13 1s-2.4.84-2.82 2H7c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-6-.5c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1z" fill="currentColor"/>
+                        <path d="M9.5 12.5l2 2 4.5-4.5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    {%- when 'heart' -%}
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+                        <path d="M11 7.5h2v3h3v2h-3v3h-2v-3H8v-2h3v-3z" fill="#ffffff"/>
+                      </svg>
+                    {%- when 'gear' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+                        <circle cx="12" cy="12" r="1.5" fill="#ffffff"/>
+                      </svg>
+                    {%- when 'recycle' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10.02 4.28L8.14 7.53l1.73 1 2.93-5.07L9.93 0 8.2 1 9.94 4L7.5 4C4.46 4 2 6.46 2 9.5c0 1.2.39 2.31 1.05 3.22l1.64-1.15C4.26 10.95 4 10.25 4 9.5 4 7.57 5.57 6 7.5 6l2.52 0-.001-1.72h.001zm10.93 8.22c.66-.91 1.05-2.02 1.05-3.22 0-3.04-2.46-5.5-5.5-5.5l-2.44 0 1.74-3-1.73-1-2.87 4.98 2.87 4.98 1.73-1-1.75-3.03 2.45.07c1.93 0 3.5 1.57 3.5 3.5 0 .75-.26 1.45-.69 2.07l1.64 1.15zM8.28 19.72l-1.74-3-1.73 1 2.87 4.98 5.74-.01v-2l-3.41 0 1.22-2.11c.96.58 2.08.92 3.27.92 3.04 0 5.5-2.46 5.5-5.5 0-.41-.05-.8-.13-1.19l-1.95.4c.05.26.08.52.08.79 0 1.93-1.57 3.5-3.5 3.5-.75 0-1.46-.24-2.05-.64l-1.65 2.86z"/>
+                      </svg>
+                    {%- when 'shield' -%}
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="currentColor"/>
+                        <path d="M9.5 12l2 2 4-4" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                    {%- when 'star' -%}
+                      <svg viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                    {%- when 'check' -%}
+                      <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                        <path d="M8.5 12.5l2.5 2.5 5-5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                      </svg>
+                  {%- endcase -%}
+                {%- endif -%}
+              </div>
+              {%- if block.settings.title != blank -%}
+                <h3 class="why-choose-us__title">
+                  {{ block.settings.title }}
+                </h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="why-choose-us__text">
+                  {{ block.settings.text }}
+                </p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Mobile / Tablet CTA button {%- endcomment -%}
+      {%- if section.settings.button_label != blank -%}
+        <div class="why-choose-us__cta--mobile">
+          <a
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% else %}
+              role="link" aria-disabled="true"
+            {% endif %}
+            class="why-choose-us__button"
+          >
+            {{- section.settings.button_label | escape -}}
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Why Choose Us",
+  "tag": "section",
+  "class": "section section-why-choose-us",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Why Choose Happy Supplements",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        },
+        {
+          "value": "hxl",
+          "label": "Extra Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Heading size"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "description",
+      "default": "Our Science-Backed Blends Are Designed To Support Your Mind And Body — Naturally, Effectively, And With Care In Every Capsule.",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Center Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Start Feeling Better",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "default": "#eef1f8",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "default": "#0c1447",
+      "label": "Heading color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "default": "#555e70",
+      "label": "Text color"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "default": "#ffffff",
+      "label": "Icon badge background"
+    },
+    {
+      "type": "color",
+      "id": "badge_icon_color",
+      "default": "#0c1447",
+      "label": "Icon badge color"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "default": "#0c1447",
+      "label": "Button background"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "default": "#ffffff",
+      "label": "Button text color"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "default": "#18225c",
+      "label": "Button hover background"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "options": [
+            {
+              "value": "flask",
+              "label": "Science / Flask"
+            },
+            {
+              "value": "leaf",
+              "label": "Natural / Leaf"
+            },
+            {
+              "value": "clipboard",
+              "label": "Results / Clipboard"
+            },
+            {
+              "value": "heart",
+              "label": "Health / Heart"
+            },
+            {
+              "value": "gear",
+              "label": "Integrity / Gears"
+            },
+            {
+              "value": "recycle",
+              "label": "Sustainable / Recycle"
+            },
+            {
+              "value": "shield",
+              "label": "Protection / Shield"
+            },
+            {
+              "value": "star",
+              "label": "Premium / Star"
+            },
+            {
+              "value": "check",
+              "label": "Guarantee / Checkmark"
+            }
+          ],
+          "default": "flask",
+          "label": "Icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon image",
+          "info": "Upload custom SVG or PNG. Overrides the preset icon."
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "default": "Benefit Title",
+          "label": "Title"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "default": "Description of the benefit or feature.",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Choose Us",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "flask",
+            "title": "Science-Backed Formulas",
+            "text": "Every Blend Is Developed Using Clinically Researched Ingredients For Proven Performance And Results."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "leaf",
+            "title": "Pure & Natural Ingredients",
+            "text": "100% Plant-Based, Vegan, And Free From Harmful Additives, Fillers, Or Synthetic Colors."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "clipboard",
+            "title": "Visible Results, Fast",
+            "text": "Experience Noticeable Improvements In Focus, Sleep Quality, And Hydration Within Days Of Consistent Use."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "heart",
+            "title": "Holistic Health Support",
+            "text": "Designed To Support Your Body And Mind — Energy In The Day, Rest At Night, Balance Always."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "gear",
+            "title": "Made With Integrity",
+            "text": "Produced In Certified Facilities And Third-Party Tested To Ensure Safety, Purity, And Potency."
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "icon": "recycle",
+            "title": "Sustainable & Conscious",
+            "text": "Thoughtfully Sourced Ingredients And Eco-Friendly Packaging — Good For You And The Planet."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
