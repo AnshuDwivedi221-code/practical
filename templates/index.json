@@ -9,43 +9,93 @@
  */
 {
   "sections": {
-    "image_banner": {
-      "type": "image-banner",
+    "slideshow": {
+      "type": "slideshow",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "slide_1": {
+          "type": "slide",
           "settings": {
-            "heading": "Browse our latest products",
-            "heading_size": "h0"
+            "eyebrow": "DISCOVER EUROPE'S HIDDEN TREASURE",
+            "heading": "ALBANIA",
+            "heading_size": "h0",
+            "subheading": "Explore nature, culture, history and unforgettable experiences.",
+            "button_label": "Explore Albania",
+            "link": "/",
+            "box_align": "middle-left",
+            "show_text_box": false,
+            "text_alignment": "left",
+            "image_overlay_opacity": 0
           }
         },
-        "button": {
-          "type": "buttons",
+        "slide_2": {
+          "type": "slide",
           "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": true,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
+            "eyebrow": "UNESCO WORLD HERITAGE SITE",
+            "heading": "BERAT",
+            "heading_size": "h0",
+            "subheading": "The city of a thousand windows nestled along the scenic Osum river.",
+            "button_label": "Explore Berat",
+            "link": "/",
+            "box_align": "middle-left",
+            "show_text_box": false,
+            "text_alignment": "left",
+            "image_overlay_opacity": 0
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "THE ACCURSED MOUNTAINS",
+            "heading": "THE ALPS",
+            "heading_size": "h0",
+            "subheading": "Dramatic jagged peaks, pristine glacial valleys, and timeless alpine beauty.",
+            "button_label": "Explore The Alps",
+            "link": "/",
+            "box_align": "middle-left",
+            "show_text_box": false,
+            "text_alignment": "left",
+            "image_overlay_opacity": 0
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "THE PEARL OF IONIAN COAST",
+            "heading": "KSAMIL",
+            "heading_size": "h0",
+            "subheading": "Crystal clear turquoise bays, untouched islands, and white sandy shores.",
+            "button_label": "Explore Ksamil",
+            "link": "/",
+            "box_align": "middle-left",
+            "show_text_box": false,
+            "text_alignment": "left",
+            "image_overlay_opacity": 0
           }
         }
       },
       "block_order": [
-        "heading",
-        "button"
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
       ],
       "settings": {
-        "image_overlay_opacity": 40,
-        "image_height": "large",
-        "desktop_content_position": "bottom-center",
-        "show_text_box": false,
+        "layout": "full_bleed",
+        "slide_height": "large",
+        "slider_visual": "numbers",
+        "auto_rotate": false,
+        "change_slides_speed": 5,
         "image_behavior": "none",
-        "desktop_content_alignment": "center",
-        "color_scheme": "scheme-3",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
+        "show_text_below": false,
+        "show_stats_bar": true,
+        "stat_1_number": "150+",
+        "stat_1_label": "Destinations",
+        "stat_2_number": "500+",
+        "stat_2_label": "Attractions",
+        "stat_3_number": "50+",
+        "stat_3_label": "Travel Guides",
+        "stat_4_number": "Millions",
+        "stat_4_label": "Annual Visitors"
       }
     },
     "featured_collection": {
@@ -78,7 +128,7 @@
     }
   },
   "order": [
-    "image_banner",
+    "slideshow",
     "featured_collection"
   ]
 }
