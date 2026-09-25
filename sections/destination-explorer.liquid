@@ -1,0 +1,1055 @@
+{{ 'section-destination-explorer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'destination-explorer.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- assign destination_blocks = section.blocks | where: 'type', 'destination' -%}
+{%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
+{%- assign first_destination = destination_blocks.first -%}
+
+{%- capture default_icon_1 -%}
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+    <circle cx="9" cy="7" r="4"></circle>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+  </svg>
+{%- endcapture -%}
+
+{%- capture default_icon_2 -%}
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+    <path d="M12 18v3"></path>
+    <path d="M10 21h4"></path>
+  </svg>
+{%- endcapture -%}
+
+{%- capture default_icon_3 -%}
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+{%- endcapture -%}
+
+{%- capture default_icon_4 -%}
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+  </svg>
+{%- endcapture -%}
+
+<div class="destination-explorer-section color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding">
+  <div class="page-width destination-explorer-container">
+    <destination-explorer class="destination-explorer" data-section-id="{{ section.id }}">
+      
+      <!-- Main Explorer Layout: Intro Content + Map Canvas + Detail Card -->
+      <div class="destination-explorer__grid">
+        
+        <!-- Left Area: Introductory Info & Repeatable Feature Highlights -->
+        <div class="destination-explorer__intro-col">
+          {%- if section.settings.eyebrow != blank -%}
+            <div class="destination-explorer__eyebrow">
+              <svg class="destination-explorer__eyebrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{{ section.settings.eyebrow | escape }}</span>
+            </div>
+          {%- endif -%}
+
+          <h2 class="destination-explorer__heading">
+            <span class="destination-explorer__heading-main">{{ section.settings.heading_part_1 | escape }}</span>
+            <span class="destination-explorer__heading-accent">{{ section.settings.heading_part_2 | escape }}</span>
+          </h2>
+
+          {%- if section.settings.show_divider -%}
+            <div class="destination-explorer__divider" aria-hidden="true">
+              <span class="destination-explorer__divider-line"></span>
+              <span class="destination-explorer__divider-symbol">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C68A36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </span>
+              <span class="destination-explorer__divider-line"></span>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.subheading != blank -%}
+            <div class="destination-explorer__subheading rte">
+              {{ section.settings.subheading }}
+            </div>
+          {%- endif -%}
+
+          <!-- Repeatable Feature Highlights (Blocks) -->
+          {%- if feature_blocks.size > 0 -%}
+            <div class="destination-explorer__features">
+              {%- for block in feature_blocks -%}
+                <div class="destination-explorer__feature-badge" {{ block.shopify_attributes }}>
+                  <div class="destination-explorer__feature-icon-wrap" aria-hidden="true">
+                    {%- if block.settings.icon != blank -%}
+                      {{ block.settings.icon | image_url: width: 80, height: 80 | image_tag: class: 'destination-explorer__feature-custom-icon', alt: block.settings.title | escape }}
+                    {%- else -%}
+                      {%- assign feature_mod = forloop.index | modulo: 3 -%}
+                      {%- if feature_mod == 1 -%}
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                          <line x1="8" y1="2" x2="8" y2="18"></line>
+                          <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                      {%- elsif feature_mod == 2 -%}
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m8 3 4 8 5-5 5 15H2L8 3z"></path>
+                        </svg>
+                      {%- else -%}
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <line x1="2" y1="22" x2="22" y2="22"></line>
+                          <line x1="4" y1="18" x2="20" y2="18"></line>
+                          <line x1="4" y1="11" x2="4" y2="18"></line>
+                          <line x1="9" y1="11" x2="9" y2="18"></line>
+                          <line x1="15" y1="11" x2="15" y2="18"></line>
+                          <line x1="20" y1="11" x2="20" y2="18"></line>
+                          <polygon points="12 2 2 7 22 7 12 2"></polygon>
+                        </svg>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </div>
+                  <div class="destination-explorer__feature-info">
+                    <span class="destination-explorer__feature-title">{{ block.settings.title | escape }}</span>
+                    <span class="destination-explorer__feature-text">{{ block.settings.description | escape }}</span>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <!-- View Full Interactive Map Link / Button -->
+          {%- if section.settings.map_cta_label != blank -%}
+            <div class="destination-explorer__cta-wrap">
+              <a href="{{ section.settings.map_cta_link | default: '#' }}" class="destination-explorer__cta-outline button--outline">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                  <line x1="8" y1="2" x2="8" y2="18"></line>
+                  <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+                <span>{{ section.settings.map_cta_label | escape }}</span>
+                <span class="destination-explorer__cta-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <!-- Center Area: Interactive 3D Relief Map Stage with Floating Compass & Pins -->
+        <div class="destination-explorer__map-col">
+          <div class="destination-explorer__map-stage" role="region" aria-label="Interactive Map of Albania">
+            
+            <!-- Floating Compass Rose -->
+            <div class="destination-explorer__compass" aria-hidden="true" title="Compass: North">
+              <span class="destination-explorer__compass-letter">N</span>
+              <svg class="destination-explorer__compass-dial" width="34" height="34" viewBox="0 0 34 34" fill="none">
+                <circle cx="17" cy="17" r="15" stroke="rgba(27,77,62,0.25)" stroke-width="1.2" stroke-dasharray="2 2" />
+                <polygon points="17 4 19.5 16 14.5 16" fill="#1B4D3E" />
+                <polygon points="17 28 19.5 16 14.5 16" fill="rgba(27,77,62,0.3)" />
+                <circle cx="17" cy="16" r="2" fill="#C68A36" />
+              </svg>
+            </div>
+
+            <!-- Map Graphic Container -->
+            <div class="destination-explorer__map-canvas">
+              {%- if section.settings.map_image != blank -%}
+                {{ section.settings.map_image | image_url: width: 1400 | image_tag:
+                  loading: 'lazy',
+                  widths: '500, 750, 1000, 1400',
+                  class: 'destination-explorer__map-img',
+                  alt: section.settings.map_image.alt | default: 'Interactive Map of Albania' | escape
+                }}
+              {%- else -%}
+                <!-- Stylized Topographic Relief SVG representation when merchant hasn't uploaded image yet -->
+                <div class="destination-explorer__map-relief-fallback" aria-hidden="true">
+                  <svg class="destination-explorer__topo-svg" viewBox="0 0 600 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <radialGradient id="albaniaSeaGrad" cx="30%" cy="40%" r="70%">
+                        <stop offset="0%" stop-color="#E8F4F5" />
+                        <stop offset="60%" stop-color="#D9EEF0" />
+                        <stop offset="100%" stop-color="#CDE7EA" />
+                      </radialGradient>
+                      <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#4B7E54" />
+                        <stop offset="45%" stop-color="#5B9364" />
+                        <stop offset="75%" stop-color="#44734D" />
+                        <stop offset="100%" stop-color="#345B3C" />
+                      </linearGradient>
+                      <linearGradient id="ridgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#80A887" stop-opacity="0.8" />
+                        <stop offset="100%" stop-color="#2C5234" stop-opacity="0.9" />
+                      </linearGradient>
+                      <filter id="mapShadow" x="-10%" y="-10%" width="125%" height="125%">
+                        <feDropShadow dx="8" dy="16" stdDeviation="14" flood-color="#1B3322" flood-opacity="0.25"/>
+                      </filter>
+                    </defs>
+                    <rect width="600" height="720" fill="url(#albaniaSeaGrad)" rx="16" />
+                    <path d="M60 200 C 120 220, 180 180, 240 210" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none" />
+                    <path d="M40 320 C 100 340, 160 300, 220 330" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none" />
+                    <path d="M50 480 C 110 500, 170 470, 230 500" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none" />
+                    <g filter="url(#mapShadow)">
+                      <path d="M260 85 C 310 90, 360 110, 375 145 C 390 180, 385 220, 380 250 C 375 280, 395 315, 385 350 C 375 385, 380 430, 360 480 C 340 530, 335 570, 315 620 C 305 645, 280 655, 270 645 C 255 630, 260 590, 240 550 C 225 520, 210 490, 225 450 C 235 425, 240 390, 230 360 C 220 330, 215 300, 225 270 C 235 240, 230 200, 235 160 C 240 120, 230 95, 260 85 Z" fill="url(#landGrad)" />
+                      <path d="M280 130 Q 320 180 340 240 Q 350 310 330 380 Q 315 450 300 520 Q 285 580 280 620" stroke="url(#ridgeGrad)" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.65" />
+                      <path d="M310 160 Q 345 220 355 290 Q 365 350 345 420" stroke="rgba(255,255,255,0.3)" stroke-width="5" stroke-linecap="round" fill="none" />
+                    </g>
+                    <g transform="translate(110, 380) scale(0.7)" opacity="0.75">
+                      <path d="M0 24 L24 24 L20 30 L4 30 Z" fill="#4B6B61" />
+                      <path d="M12 22 L12 2 L22 20 Z" fill="#FFFFFF" />
+                      <path d="M10 22 L10 6 L2 20 Z" fill="#E2E8F0" />
+                    </g>
+                  </svg>
+                </div>
+              {%- endif -%}
+
+              <!-- Interactive Destination Pins Overlay -->
+              <div class="destination-explorer__pins" role="tablist" aria-label="Albania Destination Pins">
+                {%- for block in destination_blocks -%}
+                  <button
+                    type="button"
+                    class="destination-explorer__pin{% if forloop.first %} is-active{% endif %}"
+                    data-index="{{ forloop.index0 }}"
+                    data-block-id="{{ block.id }}"
+                    style="left: {{ block.settings.pin_x }}%; top: {{ block.settings.pin_y }}%;"
+                    role="tab"
+                    id="pin-{{ section.id }}-{{ block.id }}"
+                    aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                    aria-controls="card-{{ section.id }}"
+                    tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+                    aria-label="{{ block.settings.title | escape }} destination pin"
+                    {{ block.shopify_attributes }}
+                  >
+                    <!-- Glowing Pulse Rings for Active State -->
+                    <span class="destination-explorer__pin-pulse" aria-hidden="true"></span>
+                    <span class="destination-explorer__pin-beacon" aria-hidden="true"></span>
+                    
+                    <!-- Marker Core -->
+                    <span class="destination-explorer__pin-marker" aria-hidden="true">
+                      <svg class="destination-explorer__pin-svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                      </svg>
+                    </span>
+
+                    <!-- Label Pill -->
+                    <span class="destination-explorer__pin-badge">
+                      <span class="destination-explorer__pin-name">{{ block.settings.title | escape }}</span>
+                    </span>
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+
+            <!-- Bottom Floating Capsule Destination Selector (Image + Name) -->
+            {%- if destination_blocks.size > 0 -%}
+              <div class="destination-explorer__capsule" role="region" aria-label="Destination Quick Selector">
+                <button
+                  type="button"
+                  class="destination-explorer__capsule-arrow prev"
+                  data-carousel-prev
+                  aria-label="Previous destination"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+
+                <div class="destination-explorer__capsule-track" role="tablist" aria-label="Destination quick options" data-carousel-track>
+                  {%- for block in destination_blocks -%}
+                    <button
+                      type="button"
+                      class="destination-explorer__capsule-item{% if forloop.first %} is-active{% endif %}"
+                      data-index="{{ forloop.index0 }}"
+                      data-block-id="{{ block.id }}"
+                      role="tab"
+                      id="capsule-{{ section.id }}-{{ block.id }}"
+                      aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                      aria-controls="card-{{ section.id }}"
+                      tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
+                    >
+                      <span class="destination-explorer__capsule-thumb-wrap">
+                        {%- if block.settings.image != blank -%}
+                          {{ block.settings.image | image_url: width: 100, height: 100, crop: 'center' | image_tag:
+                            loading: 'lazy',
+                            class: 'destination-explorer__capsule-img',
+                            alt: block.settings.title | escape
+                          }}
+                        {%- else -%}
+                          <span class="destination-explorer__capsule-thumb-placeholder" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                              <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                          </span>
+                        {%- endif -%}
+                      </span>
+                      <span class="destination-explorer__capsule-name">{{ block.settings.title | escape }}</span>
+                    </button>
+                  {%- endfor -%}
+                </div>
+
+                <button
+                  type="button"
+                  class="destination-explorer__capsule-arrow next"
+                  data-carousel-next
+                  aria-label="Next destination"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            {%- endif -%}
+
+          </div>
+        </div>
+
+        <!-- Right Area: Detail Card with Main Destination Image, Gallery, and Editable Fact Icons -->
+        <div class="destination-explorer__detail-col">
+          <div
+            class="destination-explorer__card"
+            id="card-{{ section.id }}"
+            role="tabpanel"
+            aria-live="polite"
+            aria-labelledby="pin-{{ section.id }}-{{ first_destination.id }}"
+          >
+            <!-- Top Tag & Wishlist Header -->
+            <div class="destination-explorer__card-header">
+              <div class="destination-explorer__card-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>SELECTED DESTINATION</span>
+              </div>
+              <button
+                type="button"
+                class="destination-explorer__card-wishlist"
+                aria-label="Save destination to favorites"
+                data-wishlist-button
+              >
+                <svg class="destination-explorer__wishlist-heart" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Title & Category Subtitle -->
+            <h3 class="destination-explorer__card-title" data-destination-title>
+              {{ first_destination.settings.title | default: 'Tirana' | escape }}
+            </h3>
+            <p class="destination-explorer__card-category" data-destination-category>
+              {{ first_destination.settings.subtitle | default: 'CAPITAL CITY' | escape }}
+            </p>
+
+            <!-- Main Hero Image Display -->
+            <div class="destination-explorer__card-media" data-destination-media>
+              {%- if first_destination.settings.image != blank -%}
+                {{ first_destination.settings.image | image_url: width: 900 | image_tag:
+                  loading: 'lazy',
+                  widths: '400, 600, 800, 900',
+                  class: 'destination-explorer__card-main-img',
+                  alt: first_destination.settings.title | escape
+                }}
+              {%- else -%}
+                <div class="destination-explorer__card-img-placeholder" data-destination-placeholder aria-label="No image available">
+                  <svg class="placeholder-svg" viewBox="0 0 525 525" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="525" height="525" fill="#E2E8F0" rx="14" />
+                    <path d="M262.5 190c-33 0-60 27-60 60s27 60 60 60 60-27 60-60-27-60-60-60zm0 96c-19.9 0-36-16.1-36-36s16.1-36 36-36 36 16.1 36 36-16.1 36-36 36z" fill="#A0AEC0"/>
+                    <path d="M375 375H150c-8.3 0-15-6.7-15-15 0-4.1 1.7-8.1 4.7-11l65-62.5c5.9-5.7 15.3-5.7 21.2 0l44.1 42.4 84.1-80.9c5.9-5.7 15.3-5.7 21.2 0l74 71c3 2.9 4.7 6.9 4.7 11 0 8.3-6.7 15-15 15z" fill="#CBD5E0"/>
+                  </svg>
+                </div>
+              {%- endif -%}
+            </div>
+
+            <!-- Optional Thumbnail Gallery (Only rendered when gallery photos exist) -->
+            {%- assign has_gallery_items = false -%}
+            {%- if first_destination.settings.gallery_image_1 != blank or first_destination.settings.gallery_image_2 != blank or first_destination.settings.gallery_image_3 != blank or first_destination.settings.gallery_image_4 != blank -%}
+              {%- assign has_gallery_items = true -%}
+            {%- endif -%}
+
+            <div
+              class="destination-explorer__gallery"
+              data-destination-gallery
+              role="group"
+              aria-label="Destination gallery preview images"
+              style="{% unless has_gallery_items %}display: none;{% endunless %}"
+            >
+              {%- if has_gallery_items -%}
+                {%- assign thumb_counter = 0 -%}
+                {%- if first_destination.settings.gallery_image_1 != blank -%}
+                  <button type="button" class="destination-explorer__gallery-thumb" data-gallery-index="{{ thumb_counter }}" aria-label="Show gallery photo 1">
+                    {{ first_destination.settings.gallery_image_1 | image_url: width: 180, height: 120, crop: 'center' | image_tag: loading: 'lazy', alt: first_destination.settings.title | escape }}
+                  </button>
+                  {%- assign thumb_counter = thumb_counter | plus: 1 -%}
+                {%- endif -%}
+                {%- if first_destination.settings.gallery_image_2 != blank -%}
+                  <button type="button" class="destination-explorer__gallery-thumb" data-gallery-index="{{ thumb_counter }}" aria-label="Show gallery photo 2">
+                    {{ first_destination.settings.gallery_image_2 | image_url: width: 180, height: 120, crop: 'center' | image_tag: loading: 'lazy', alt: first_destination.settings.title | escape }}
+                  </button>
+                  {%- assign thumb_counter = thumb_counter | plus: 1 -%}
+                {%- endif -%}
+                {%- if first_destination.settings.gallery_image_3 != blank -%}
+                  <button type="button" class="destination-explorer__gallery-thumb" data-gallery-index="{{ thumb_counter }}" aria-label="Show gallery photo 3">
+                    {{ first_destination.settings.gallery_image_3 | image_url: width: 180, height: 120, crop: 'center' | image_tag: loading: 'lazy', alt: first_destination.settings.title | escape }}
+                  </button>
+                  {%- assign thumb_counter = thumb_counter | plus: 1 -%}
+                {%- endif -%}
+                {%- if first_destination.settings.gallery_image_4 != blank -%}
+                  <button type="button" class="destination-explorer__gallery-thumb" data-gallery-index="{{ thumb_counter }}" aria-label="Show gallery photo 4">
+                    {{ first_destination.settings.gallery_image_4 | image_url: width: 180, height: 120, crop: 'center' | image_tag: loading: 'lazy', alt: first_destination.settings.title | escape }}
+                  </button>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+
+            <!-- Description -->
+            <div class="destination-explorer__card-desc rte" data-destination-desc>
+              {%- if first_destination.settings.description != blank -%}
+                {{ first_destination.settings.description }}
+              {%- else -%}
+                <p>Explore this stunning destination and discover authentic culture, pristine nature, and warm hospitality.</p>
+              {%- endif -%}
+            </div>
+
+            <!-- Quick Facts Grid with Editable Icons, Labels & Values -->
+            <div class="destination-explorer__facts-section">
+              <span class="destination-explorer__facts-heading">QUICK FACTS</span>
+              <div class="destination-explorer__facts-grid" data-destination-facts>
+                <!-- Fact 1 -->
+                <div class="destination-explorer__fact-item" data-fact="1">
+                  <div class="destination-explorer__fact-icon" data-fact-icon="1" aria-hidden="true">
+                    {%- if first_destination.settings.fact_1_icon != blank -%}
+                      {{ first_destination.settings.fact_1_icon | image_url: width: 48, height: 48 | image_tag: class: 'destination-explorer__fact-custom-icon', alt: first_destination.settings.fact_1_label }}
+                    {%- else -%}
+                      {{ default_icon_1 }}
+                    {%- endif -%}
+                  </div>
+                  <div class="destination-explorer__fact-text">
+                    <span class="destination-explorer__fact-label" data-fact-label="1">{{ first_destination.settings.fact_1_label | default: 'Population' | escape }}</span>
+                    <span class="destination-explorer__fact-val" data-fact-val="1">{{ first_destination.settings.fact_1_value | default: '900k+' | escape }}</span>
+                  </div>
+                </div>
+
+                <!-- Fact 2 -->
+                <div class="destination-explorer__fact-item" data-fact="2">
+                  <div class="destination-explorer__fact-icon" data-fact-icon="2" aria-hidden="true">
+                    {%- if first_destination.settings.fact_2_icon != blank -%}
+                      {{ first_destination.settings.fact_2_icon | image_url: width: 48, height: 48 | image_tag: class: 'destination-explorer__fact-custom-icon', alt: first_destination.settings.fact_2_label }}
+                    {%- else -%}
+                      {{ default_icon_2 }}
+                    {%- endif -%}
+                  </div>
+                  <div class="destination-explorer__fact-text">
+                    <span class="destination-explorer__fact-label" data-fact-label="2">{{ first_destination.settings.fact_2_label | default: 'Elevation' | escape }}</span>
+                    <span class="destination-explorer__fact-val" data-fact-val="2">{{ first_destination.settings.fact_2_value | default: '110 m' | escape }}</span>
+                  </div>
+                </div>
+
+                <!-- Fact 3 -->
+                <div class="destination-explorer__fact-item" data-fact="3">
+                  <div class="destination-explorer__fact-icon" data-fact-icon="3" aria-hidden="true">
+                    {%- if first_destination.settings.fact_3_icon != blank -%}
+                      {{ first_destination.settings.fact_3_icon | image_url: width: 48, height: 48 | image_tag: class: 'destination-explorer__fact-custom-icon', alt: first_destination.settings.fact_3_label }}
+                    {%- else -%}
+                      {{ default_icon_3 }}
+                    {%- endif -%}
+                  </div>
+                  <div class="destination-explorer__fact-text">
+                    <span class="destination-explorer__fact-label" data-fact-label="3">{{ first_destination.settings.fact_3_label | default: 'Best Time' | escape }}</span>
+                    <span class="destination-explorer__fact-val" data-fact-val="3">{{ first_destination.settings.fact_3_value | default: 'Apr-Oct' | escape }}</span>
+                  </div>
+                </div>
+
+                <!-- Fact 4 -->
+                <div class="destination-explorer__fact-item" data-fact="4">
+                  <div class="destination-explorer__fact-icon" data-fact-icon="4" aria-hidden="true">
+                    {%- if first_destination.settings.fact_4_icon != blank -%}
+                      {{ first_destination.settings.fact_4_icon | image_url: width: 48, height: 48 | image_tag: class: 'destination-explorer__fact-custom-icon', alt: first_destination.settings.fact_4_label }}
+                    {%- else -%}
+                      {{ default_icon_4 }}
+                    {%- endif -%}
+                  </div>
+                  <div class="destination-explorer__fact-text">
+                    <span class="destination-explorer__fact-label" data-fact-label="4">{{ first_destination.settings.fact_4_label | default: 'Avg.Temp' | escape }}</span>
+                    <span class="destination-explorer__fact-val" data-fact-val="4">{{ first_destination.settings.fact_4_value | default: '18°C' | escape }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Approved Project Primary Button CTA (Consistent with Homepage System) -->
+            <a
+              href="{{ first_destination.settings.button_link | default: '#' }}"
+              class="destination-explorer__explore-btn button button--primary"
+              data-destination-btn
+            >
+              <span data-destination-btn-text>{{ first_destination.settings.button_label | default: 'EXPLORE DESTINATION' | escape }}</span>
+              <svg class="destination-explorer__btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- JSON Data Store: Client-side Synchronization for Dynamic Blocks -->
+      <script type="application/json" data-destinations-json>
+        [
+          {%- for block in destination_blocks -%}
+            {
+              "id": {{ block.id | json }},
+              "index": {{ forloop.index0 }},
+              "title": {{ block.settings.title | default: 'Destination' | json }},
+              "subtitle": {{ block.settings.subtitle | default: 'REGION' | json }},
+              "description": {{ block.settings.description | default: '<p>Explore this stunning destination and discover authentic culture, pristine nature, and warm hospitality.</p>' | json }},
+              "pinX": {{ block.settings.pin_x }},
+              "pinY": {{ block.settings.pin_y }},
+              "mainImage": {%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 900 | json }}{%- else -%}null{%- endif -%},
+              "mainImageAlt": {{ block.settings.image.alt | default: block.settings.title | default: 'Destination' | json }},
+              "gallery": [
+                {%- assign has_prev = false -%}
+                {%- if block.settings.gallery_image_1 != blank -%}
+                  {
+                    "src": {{ block.settings.gallery_image_1 | image_url: width: 900 | json }},
+                    "thumb": {{ block.settings.gallery_image_1 | image_url: width: 180, height: 120, crop: 'center' | json }},
+                    "alt": {{ block.settings.gallery_image_1.alt | default: block.settings.title | json }}
+                  }
+                  {%- assign has_prev = true -%}
+                {%- endif -%}
+                {%- if block.settings.gallery_image_2 != blank -%}
+                  {%- if has_prev -%},{%- endif -%}
+                  {
+                    "src": {{ block.settings.gallery_image_2 | image_url: width: 900 | json }},
+                    "thumb": {{ block.settings.gallery_image_2 | image_url: width: 180, height: 120, crop: 'center' | json }},
+                    "alt": {{ block.settings.gallery_image_2.alt | default: block.settings.title | json }}
+                  }
+                  {%- assign has_prev = true -%}
+                {%- endif -%}
+                {%- if block.settings.gallery_image_3 != blank -%}
+                  {%- if has_prev -%},{%- endif -%}
+                  {
+                    "src": {{ block.settings.gallery_image_3 | image_url: width: 900 | json }},
+                    "thumb": {{ block.settings.gallery_image_3 | image_url: width: 180, height: 120, crop: 'center' | json }},
+                    "alt": {{ block.settings.gallery_image_3.alt | default: block.settings.title | json }}
+                  }
+                  {%- assign has_prev = true -%}
+                {%- endif -%}
+                {%- if block.settings.gallery_image_4 != blank -%}
+                  {%- if has_prev -%},{%- endif -%}
+                  {
+                    "src": {{ block.settings.gallery_image_4 | image_url: width: 900 | json }},
+                    "thumb": {{ block.settings.gallery_image_4 | image_url: width: 180, height: 120, crop: 'center' | json }},
+                    "alt": {{ block.settings.gallery_image_4.alt | default: block.settings.title | json }}
+                  }
+                {%- endif -%}
+              ],
+              "fact1Icon": {%- if block.settings.fact_1_icon != blank -%}{{ block.settings.fact_1_icon | image_url: width: 48, height: 48 | json }}{%- else -%}null{%- endif -%},
+              "fact1Label": {{ block.settings.fact_1_label | default: 'Population' | json }},
+              "fact1Value": {{ block.settings.fact_1_value | default: '900k+' | json }},
+              "fact2Icon": {%- if block.settings.fact_2_icon != blank -%}{{ block.settings.fact_2_icon | image_url: width: 48, height: 48 | json }}{%- else -%}null{%- endif -%},
+              "fact2Label": {{ block.settings.fact_2_label | default: 'Elevation' | json }},
+              "fact2Value": {{ block.settings.fact_2_value | default: '110 m' | json }},
+              "fact3Icon": {%- if block.settings.fact_3_icon != blank -%}{{ block.settings.fact_3_icon | image_url: width: 48, height: 48 | json }}{%- else -%}null{%- endif -%},
+              "fact3Label": {{ block.settings.fact_3_label | default: 'Best Time' | json }},
+              "fact3Value": {{ block.settings.fact_3_value | default: 'Apr-Oct' | json }},
+              "fact4Icon": {%- if block.settings.fact_4_icon != blank -%}{{ block.settings.fact_4_icon | image_url: width: 48, height: 48 | json }}{%- else -%}null{%- endif -%},
+              "fact4Label": {{ block.settings.fact_4_label | default: 'Avg.Temp' | json }},
+              "fact4Value": {{ block.settings.fact_4_value | default: '18°C' | json }},
+              "buttonLabel": {{ block.settings.button_label | default: 'EXPLORE DESTINATION' | json }},
+              "buttonLink": {{ block.settings.button_link | default: '#' | json }}
+            }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ]
+      </script>
+    </destination-explorer>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Destination Explorer",
+  "tag": "section",
+  "class": "section-destination-explorer",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "default": "DESTINATIONS"
+    },
+    {
+      "type": "text",
+      "id": "heading_part_1",
+      "label": "Heading Part 1 (Dark)",
+      "default": "Discover Our"
+    },
+    {
+      "type": "text",
+      "id": "heading_part_2",
+      "label": "Heading Part 2 (Accent Green)",
+      "default": "Destinations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show Decorative Divider",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading / Description",
+      "default": "<p>Explore Albania virtually through our interactive map. Click on any region to discover its beauty, attractions, culture and more.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "map_image",
+      "label": "Relief Map Image",
+      "info": "Upload the 3D topographic relief map of Albania from Figma. If left empty, an elegant stylized SVG topographic relief is displayed."
+    },
+    {
+      "type": "header",
+      "content": "Interactive Map Button"
+    },
+    {
+      "type": "text",
+      "id": "map_cta_label",
+      "label": "Button Label",
+      "default": "View Full Interactive Map"
+    },
+    {
+      "type": "url",
+      "id": "map_cta_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout & Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Highlight",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Feature Icon",
+          "info": "Upload custom icon from Figma. If empty, a clean SVG icon is displayed."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Feature Description",
+          "default": "Feature description"
+        }
+      ]
+    },
+    {
+      "type": "destination",
+      "name": "Destination",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Destination Name",
+          "default": "Tirana"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Category / Region Tag",
+          "default": "CAPITAL CITY"
+        },
+        {
+          "type": "header",
+          "content": "Destination Media"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Main Destination Image",
+          "info": "Used as the main image in the detail card and the bottom destination selector thumbnail."
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_1",
+          "label": "Gallery Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_2",
+          "label": "Gallery Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_3",
+          "label": "Gallery Image 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_4",
+          "label": "Gallery Image 4"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Tirana is a vibrant city where history, culture and modern life come together. Explore colorful streets, museums and a dynamic atmosphere.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Map Pin Coordinates (%)"
+        },
+        {
+          "type": "range",
+          "id": "pin_x",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Pin Position X (Horizontal %)",
+          "default": 45
+        },
+        {
+          "type": "range",
+          "id": "pin_y",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Pin Position Y (Vertical %)",
+          "default": 36
+        },
+        {
+          "type": "header",
+          "content": "Quick Fact 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "fact_1_icon",
+          "label": "Fact 1 Icon"
+        },
+        {
+          "type": "text",
+          "id": "fact_1_label",
+          "label": "Fact 1 Label",
+          "default": "Population"
+        },
+        {
+          "type": "text",
+          "id": "fact_1_value",
+          "label": "Fact 1 Value",
+          "default": "900k+"
+        },
+        {
+          "type": "header",
+          "content": "Quick Fact 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "fact_2_icon",
+          "label": "Fact 2 Icon"
+        },
+        {
+          "type": "text",
+          "id": "fact_2_label",
+          "label": "Fact 2 Label",
+          "default": "Elevation"
+        },
+        {
+          "type": "text",
+          "id": "fact_2_value",
+          "label": "Fact 2 Value",
+          "default": "110 m"
+        },
+        {
+          "type": "header",
+          "content": "Quick Fact 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "fact_3_icon",
+          "label": "Fact 3 Icon"
+        },
+        {
+          "type": "text",
+          "id": "fact_3_label",
+          "label": "Fact 3 Label",
+          "default": "Best Time"
+        },
+        {
+          "type": "text",
+          "id": "fact_3_value",
+          "label": "Fact 3 Value",
+          "default": "Apr-Oct"
+        },
+        {
+          "type": "header",
+          "content": "Quick Fact 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "fact_4_icon",
+          "label": "Fact 4 Icon"
+        },
+        {
+          "type": "text",
+          "id": "fact_4_label",
+          "label": "Fact 4 Label",
+          "default": "Avg.Temp"
+        },
+        {
+          "type": "text",
+          "id": "fact_4_value",
+          "label": "Fact 4 Value",
+          "default": "18°C"
+        },
+        {
+          "type": "header",
+          "content": "Destination CTA Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "EXPLORE DESTINATION"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Destination Explorer",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Interactive Map",
+            "description": "Explore every region"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Top Attractions",
+            "description": "Must see places"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Cultural Highlights",
+            "description": "Heritage & traditions"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Tirana",
+            "subtitle": "CAPITAL CITY",
+            "description": "<p>Tirana is a vibrant city where history, culture and modern life come together. Explore colorful streets, museums and a dynamic atmosphere.</p>",
+            "pin_x": 45,
+            "pin_y": 36,
+            "fact_1_label": "Population",
+            "fact_1_value": "900k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "110 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "Apr-Oct",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "18°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Berat",
+            "subtitle": "UNESCO WORLD HERITAGE",
+            "description": "<p>Known as the City of a Thousand Windows, Berat showcases stunning Ottoman architecture, an ancient hilltop castle, and rich cultural heritage.</p>",
+            "pin_x": 45,
+            "pin_y": 51,
+            "fact_1_label": "Population",
+            "fact_1_value": "60k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "58 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "May-Sep",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "19°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Sarande",
+            "subtitle": "IONIAN RIVIERA PEARL",
+            "description": "<p>A coastal paradise overlooking the turquoise Ionian Sea, famous for crystal-clear beaches, vibrant promenades, and the ancient ruins of Butrint.</p>",
+            "pin_x": 49,
+            "pin_y": 72,
+            "fact_1_label": "Population",
+            "fact_1_value": "40k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "10 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "May-Oct",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "22°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Shkoder",
+            "subtitle": "NORTHERN CULTURAL CAPITAL",
+            "description": "<p>Gateway to the majestic Albanian Alps, Shkoder is one of Europe's oldest cities with Rozafa Castle, scenic lakes, and artisan traditions.</p>",
+            "pin_x": 41,
+            "pin_y": 18,
+            "fact_1_label": "Population",
+            "fact_1_value": "140k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "16 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "Apr-Oct",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "16°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Durres",
+            "subtitle": "ANCIENT ADRIATIC PORT",
+            "description": "<p>Home to the largest Roman amphitheater in the Balkans, Durres combines thousands of years of ancient history with golden sandy Adriatic beaches.</p>",
+            "pin_x": 37,
+            "pin_y": 37,
+            "fact_1_label": "Population",
+            "fact_1_value": "175k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "5 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "May-Sep",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "20°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Vlore",
+            "subtitle": "WHERE TWO SEAS MEET",
+            "description": "<p>Historic city of Albanian independence, positioned right where the Adriatic and Ionian Seas meet, boasting dramatic cliffs and pristine marine bays.</p>",
+            "pin_x": 40,
+            "pin_y": 56,
+            "fact_1_label": "Population",
+            "fact_1_value": "130k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "12 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "May-Oct",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "21°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Gjirokaster",
+            "subtitle": "HISTORIC STONE CITY",
+            "description": "<p>A rare UNESCO fortress town perched in the mountains, featuring distinctive tower houses, cobblestone bazaar alleys, and dramatic vistas.</p>",
+            "pin_x": 48,
+            "pin_y": 62,
+            "fact_1_label": "Population",
+            "fact_1_value": "28k+",
+            "fact_2_label": "Elevation",
+            "fact_2_value": "300 m",
+            "fact_3_label": "Best Time",
+            "fact_3_value": "Apr-Oct",
+            "fact_4_label": "Avg.Temp",
+            "fact_4_value": "17°C",
+            "button_label": "EXPLORE DESTINATION"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
