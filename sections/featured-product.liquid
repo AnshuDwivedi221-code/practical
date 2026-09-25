@@ -16,6 +16,7 @@
 >
   {{ 'section-main-product.css' | asset_url | stylesheet_tag }}
   {{ 'section-featured-product.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
   {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
@@ -37,6 +38,12 @@
       .section-{{ section.id }}-padding {
         padding-top: {{ section.settings.padding_top }}px;
         padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+    @media screen and (min-width: 990px) {
+      .section-{{ section.id }}-padding {
+        padding-left: 0;
+        padding-right: 0;
       }
     }
   {%- endstyle -%}
@@ -73,10 +80,10 @@
   {%- endunless -%}
   <section class="color-{{ section.settings.color_scheme }} {% if section.settings.secondary_background %}background-secondary{% else %}gradient{% endif %}">
     <div class="page-width section-{{ section.id }}-padding{% if section.settings.secondary_background %} isolate{% endif %}">
-      <div class="featured-product product product--{{ section.settings.media_size }} grid grid--1-col gradient color-{{ section.settings.color_scheme }} product--{{ section.settings.media_position }}{% if section.settings.secondary_background == false %} isolate{% endif %} {% if product.media.size > 0 or section.settings.product == blank %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
+      <div class="featured-product product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout | default: 'thumbnail_slider' }} product--mobile-{{ section.settings.mobile_thumbnails | default: 'show' }} grid grid--1-col gradient color-{{ section.settings.color_scheme }}{% if section.settings.secondary_background == false %} isolate{% endif %} {% if product.media.size > 0 or section.settings.product == blank %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
         <div class="grid__item product__media-wrapper">
           {%- unless placeholder -%}
-            {% render 'product-media-gallery', product: product, variant_images: variant_images, limit: 1 %}
+            {% render 'product-media-gallery', product: product, variant_images: variant_images %}
           {%- else -%}
             <div class="product__media-item">
               <div
@@ -96,6 +103,13 @@
             data-url="{{ product.url }}"
           >
             {%- assign product_form_id = 'product-form-' | append: section.id -%}
+            {%- assign has_description_block = false -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'description' -%}
+                {%- assign has_description_block = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
 
             {%- for block in section.blocks -%}
               {%- case block.type -%}
@@ -153,6 +167,19 @@
                       {%- endform -%}
                     </div>
                   {%- endunless -%}
+                  {%- unless has_description_block -%}
+                    {%- if product.description != blank -%}
+                      <div class="product__description rte quick-add-hidden">
+                        {{ product.description }}
+                      </div>
+                    {%- endif -%}
+                  {%- endunless -%}
+                {%- when 'description' -%}
+                  {%- if product.description != blank -%}
+                    <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
+                      {{ product.description }}
+                    </div>
+                  {%- endif -%}
                 {%- when 'sku' -%}
                   <p
                     class="product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}"
@@ -590,6 +617,11 @@
     {
       "type": "price",
       "name": "t:sections.featured-product.blocks.price.name",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "t:sections.main-product.blocks.description.name",
       "limit": 1
     },
     {
@@ -1437,7 +1469,7 @@
     {
       "type": "checkbox",
       "id": "constrain_to_viewport",
-      "default": true,
+      "default": false,
       "label": "t:sections.main-product.settings.constrain_to_viewport.label"
     },
     {
@@ -1453,8 +1485,52 @@
           "label": "t:sections.main-product.settings.media_fit.options__2.label"
         }
       ],
-      "default": "contain",
+      "default": "cover",
       "label": "t:sections.main-product.settings.media_fit.label"
+    },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "options": [
+        {
+          "value": "stacked",
+          "label": "t:sections.main-product.settings.gallery_layout.options__1.label"
+        },
+        {
+          "value": "columns",
+          "label": "t:sections.main-product.settings.gallery_layout.options__2.label"
+        },
+        {
+          "value": "thumbnail",
+          "label": "t:sections.main-product.settings.gallery_layout.options__3.label"
+        },
+        {
+          "value": "thumbnail_slider",
+          "label": "t:sections.main-product.settings.gallery_layout.options__4.label"
+        }
+      ],
+      "default": "thumbnail_slider",
+      "label": "t:sections.main-product.settings.gallery_layout.label"
+    },
+    {
+      "type": "select",
+      "id": "mobile_thumbnails",
+      "options": [
+        {
+          "value": "columns",
+          "label": "t:sections.main-product.settings.mobile_thumbnails.options__1.label"
+        },
+        {
+          "value": "show",
+          "label": "t:sections.main-product.settings.mobile_thumbnails.options__2.label"
+        },
+        {
+          "value": "hide",
+          "label": "t:sections.main-product.settings.mobile_thumbnails.options__3.label"
+        }
+      ],
+      "default": "show",
+      "label": "t:sections.main-product.settings.mobile_thumbnails.label"
     },
     {
       "type": "select",
@@ -1545,6 +1621,9 @@
         },
         {
           "type": "price"
+        },
+        {
+          "type": "description"
         },
         {
           "type": "variant_picker"

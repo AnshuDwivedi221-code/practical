@@ -1974,10 +1974,13 @@ input[type='checkbox'] {
 }
 
 .quantity__button .svg-wrapper {
-  width: 1rem;
+  width: 15px;
+  height: 15px;
   pointer-events: none;
 }
-
+.price-per-item__container .quantity__input {
+  font-size: 2rem;
+}
 .quantity__button:focus-visible,
 .quantity__input:focus-visible {
   background-color: rgb(var(--color-background));
