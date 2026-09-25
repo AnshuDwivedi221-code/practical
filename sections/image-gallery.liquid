@@ -1,0 +1,404 @@
+{{ 'section-image-gallery.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign heading_content = section.settings.heading
+  if section.settings.highlight_text != blank
+    assign highlight_span = '<span class="gallery__heading-highlight">' | append: section.settings.highlight_text | append: '</span>'
+    assign heading_content = heading_content | replace: section.settings.highlight_text, highlight_span
+  endif
+-%}
+
+<div
+  id="ImageGallery-{{ section.id }}"
+  class="image-gallery color-{{ section.settings.color_scheme }} gradient section-{{ section.id }}-padding"
+>
+  <div class="page-width gallery__wrapper">
+    {%- comment -%} Section Header {%- endcomment -%}
+    <div class="gallery__header">
+      <div class="gallery__header-left">
+        {%- if section.settings.eyebrow != blank -%}
+          <div class="gallery__eyebrow">
+            <span class="gallery__eyebrow-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a1.5 1.5 0 0 1 1.5 1.5v1.07a7.03 7.03 0 0 1 2.45 1.01l.76-.76a1.5 1.5 0 0 1 2.12 2.12l-.76.76c.44.76.78 1.59 1.01 2.45H20.5a1.5 1.5 0 0 1 0 3h-1.42a7.03 7.03 0 0 1-1.01 2.45l.76.76a1.5 1.5 0 0 1-2.12 2.12l-.76-.76a7.03 7.03 0 0 1-2.45 1.01v1.42a1.5 1.5 0 0 1-3 0v-1.42a7.03 7.03 0 0 1-2.45-1.01l-.76.76a1.5 1.5 0 0 1-2.12-2.12l.76-.76a7.03 7.03 0 0 1-1.01-2.45H3.5a1.5 1.5 0 0 1 0-3h1.42c.23-.86.57-1.69 1.01-2.45l-.76-.76a1.5 1.5 0 0 1 2.12-2.12l.76.76A7.03 7.03 0 0 1 10.5 4.57V3.5A1.5 1.5 0 0 1 12 2zm0 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 2.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+              </svg>
+            </span>
+            <span>{{ section.settings.eyebrow }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="gallery__heading">
+            {{ heading_content }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.show_divider -%}
+          <div class="gallery__divider">
+            <span class="gallery__divider-line"></span>
+            <span class="gallery__divider-symbol">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a1.5 1.5 0 0 1 1.5 1.5v1.07a7.03 7.03 0 0 1 2.45 1.01l.76-.76a1.5 1.5 0 0 1 2.12 2.12l-.76.76c.44.76.78 1.59 1.01 2.45H20.5a1.5 1.5 0 0 1 0 3h-1.42a7.03 7.03 0 0 1-1.01 2.45l.76.76a1.5 1.5 0 0 1-2.12 2.12l-.76-.76a7.03 7.03 0 0 1-2.45 1.01v1.42a1.5 1.5 0 0 1-3 0v-1.42a7.03 7.03 0 0 1-2.45-1.01l-.76.76a1.5 1.5 0 0 1-2.12-2.12l.76-.76a7.03 7.03 0 0 1-1.01-2.45H3.5a1.5 1.5 0 0 1 0-3h1.42c.23-.86.57-1.69 1.01-2.45l-.76-.76a1.5 1.5 0 0 1 2.12-2.12l.76.76A7.03 7.03 0 0 1 10.5 4.57V3.5A1.5 1.5 0 0 1 12 2zm0 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0 2.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+              </svg>
+            </span>
+            <span class="gallery__divider-line"></span>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="gallery__description rte">
+            {{ section.settings.description }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="gallery__header-cta">
+          <a
+            {% if section.settings.button_link != blank %}
+              href="{{ section.settings.button_link }}"
+            {% else %}
+              role="link" aria-disabled="true"
+            {% endif %}
+            class="button button--secondary gallery__button"
+          >
+            <span>{{- section.settings.button_label | escape -}}</span>
+            <svg class="gallery__button-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Gallery Grid (4 Columns) {%- endcomment -%}
+    <div class="gallery__grid">
+      {%- for i in (0..3) -%}
+        {%- assign idx1 = i | times: 2 -%}
+        {%- assign idx2 = idx1 | plus: 1 -%}
+        {%- assign block1 = section.blocks[idx1] -%}
+        {%- assign block2 = section.blocks[idx2] -%}
+        {%- assign col_number = i | plus: 1 -%}
+
+        {%- assign show_block1 = false -%}
+        {%- if block1 != blank -%}
+          {%- if block1.settings.image != blank or request.design_mode -%}
+            {%- assign show_block1 = true -%}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- assign show_block2 = false -%}
+        {%- if block2 != blank -%}
+          {%- if block2.settings.image != blank or request.design_mode -%}
+            {%- assign show_block2 = true -%}
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if show_block1 or show_block2 -%}
+          <div class="gallery__col gallery__col--{{ col_number }}">
+            {%- if show_block1 -%}
+              <div
+                class="gallery__item gallery__item--col-{{ col_number }}-1 gallery__item--size-{{ block1.settings.aspect_ratio | default: 'auto' }}"
+                {{ block1.shopify_attributes }}
+              >
+                {%- if block1.settings.link != blank -%}
+                  <a href="{{ block1.settings.link }}" class="gallery__card-link">
+                {%- else -%}
+                  <div class="gallery__card">
+                {%- endif -%}
+
+                  <div class="gallery__image-wrap">
+                    {%- if block1.settings.image != blank -%}
+                      {%- assign image_alt_1 = block1.settings.alt_text | default: block1.settings.image.alt | default: '' -%}
+                      {{
+                        block1.settings.image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '350, 500, 700, 900',
+                          class: 'gallery__image',
+                          alt: image_alt_1 | escape
+                      }}
+                    {%- elsif request.design_mode -%}
+                      <div class="gallery__placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                          <circle cx="9" cy="9" r="2"/>
+                          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                        </svg>
+                        <span>Select Image</span>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                {%- if block1.settings.link != blank -%}
+                  </a>
+                {%- else -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if show_block2 -%}
+              <div
+                class="gallery__item gallery__item--col-{{ col_number }}-2 gallery__item--size-{{ block2.settings.aspect_ratio | default: 'auto' }}"
+                {{ block2.shopify_attributes }}
+              >
+                {%- if block2.settings.link != blank -%}
+                  <a href="{{ block2.settings.link }}" class="gallery__card-link">
+                {%- else -%}
+                  <div class="gallery__card">
+                {%- endif -%}
+
+                  <div class="gallery__image-wrap">
+                    {%- if block2.settings.image != blank -%}
+                      {%- assign image_alt_2 = block2.settings.alt_text | default: block2.settings.image.alt | default: '' -%}
+                      {{
+                        block2.settings.image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '350, 500, 700, 900',
+                          class: 'gallery__image',
+                          alt: image_alt_2 | escape
+                      }}
+                    {%- elsif request.design_mode -%}
+                      <div class="gallery__placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                          <circle cx="9" cy="9" r="2"/>
+                          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                        </svg>
+                        <span>Select Image</span>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                {%- if block2.settings.link != blank -%}
+                  </a>
+                {%- else -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image Gallery",
+  "tag": "section",
+  "class": "section section-image-gallery",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "default": "GALLERY",
+      "label": "Eyebrow tag"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "See Albania Through Images",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "highlight_text",
+      "default": "Albania",
+      "label": "Highlight word in heading",
+      "info": "This word will be colored with the accent highlight color."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "default": true,
+      "label": "Show decorative divider"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "description",
+      "default": "A visual journey across breathtaking landscapes, timeless heritage, vibrant culture and unforgettable moments.",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "View Gallery",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Image alt text",
+          "info": "Describe the image for accessibility."
+        },
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto (Staggered Layout)"
+            },
+            {
+              "value": "tall",
+              "label": "Tall (Portrait)"
+            },
+            {
+              "value": "wide",
+              "label": "Wide (Landscape)"
+            },
+            {
+              "value": "medium",
+              "label": "Medium"
+            },
+            {
+              "value": "square",
+              "label": "Square"
+            }
+          ],
+          "default": "auto",
+          "label": "Aspect ratio / Size"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Gallery",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "aspect_ratio": "auto"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
